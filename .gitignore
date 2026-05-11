@@ -19,8 +19,8 @@ venv/
 .vscode/
 
 # Data and artifacts
-dataset/
-trained_model/
+#dataset/
+#trained_model/
 
 # Notebooks
 .ipynb_checkpoints/
