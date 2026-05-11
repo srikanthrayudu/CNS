@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NIDS Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <h1>NIDS Dashboard</h1>
+            <span class="status" id="modelStatus">Model: Not trained</span>
+        </header>
+
+        <section class="grid">
+            <div class="card">
+                <h2>1. Upload Dataset</h2>
+                <input type="file" id="dataset">
+                <button class="button" onclick="uploadFile()">Upload</button>
+                <p class="hint" id="uploadPath">No dataset uploaded.</p>
+            </div>
+
+            <div class="card">
+                <h2>2. Train Model</h2>
+                <select id="modelType">
+                    <option value="auto">Auto (Best Model)</option>
+                    <option value="random_forest">Random Forest</option>
+                    <option value="decision_tree">Decision Tree</option>
+                    <option value="svm">SVM</option>
+                </select>
+                <div class="form-grid">
+                    <label class="form-field">
+                        <span>Test set path (optional)</span>
+                        <input type="text" id="testPath" placeholder="dataset/KDDTest+.csv">
+                    </label>
+                    <label class="form-field">
+                        <span>Test split (if no test file)</span>
+                        <input type="number" id="testSize" min="0.1" max="0.5" step="0.05" value="0.3">
+                    </label>
+                    <label class="form-field">
+                        <span>Class weight</span>
+                        <select id="classWeight">
+                            <option value="balanced">balanced</option>
+                            <option value="none">none</option>
+                        </select>
+                    </label>
+                    <label class="form-field inline">
+                        <input type="checkbox" id="tuneModel">
+                        <span>Enable tuning</span>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button class="button" onclick="useKaggleDataset()">Use Kaggle Dataset</button>
+                    <button class="button primary" onclick="trainModel()">Train</button>
+                </div>
+                <div id="trainResult" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h2>3. Predict (CSV)</h2>
+                <input type="file" id="predictFile">
+                <button class="button" onclick="predictFile()">Run Prediction</button>
+                <div id="predictSummary" class="result"></div>
+                <div id="predictResult" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h2>4. Metrics & Charts</h2>
+                <div class="chart-grid">
+                    <canvas id="metricsChart" height="160"></canvas>
+                    <canvas id="confusionChart" height="160"></canvas>
+                </div>
+                <div class="table-wrap">
+                    <table id="confusionTable" class="matrix-table"></table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. Attack Statistics</h2>
+                <canvas id="attackChart" height="180"></canvas>
+                <div id="attackSummary" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h2>6. Dataset Insights</h2>
+                <div id="datasetInsights" class="result">Train a model to view dataset summary.</div>
+            </div>
+
+            <div class="card">
+                <h2>7. Live Alerts (Optional)</h2>
+                <div class="button-group">
+                    <button class="button" onclick="startLive()">Start</button>
+                    <button class="button" onclick="stopLive()">Stop</button>
+                    <button class="button" onclick="clearLive()">Clear</button>
+                </div>
+                <div id="liveStatus" class="hint">Live capture stopped.</div>
+                <ul id="alerts" class="alerts"></ul>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
